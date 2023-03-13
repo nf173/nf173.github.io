@@ -1,11 +1,11 @@
 @font-face {
   font-family: sourceHanSerif;
-  src: url("/font/SourceHanSerifCN/regular.ttf");
+  src: url("/font/SourceHanSerifCN/regular.otf");
   font-weight: normal;
 }
 @font-face {
   font-family: sourceHanSerif;
-  src: url("/font/SourceHanSerifCN/bold.ttf");
+  src: url("/font/SourceHanSerifCN/bold.otf");
   font-weight: bold;
 }
 @font-face {
@@ -544,7 +544,6 @@ figure.highlight .gutter pre {
   margin: 0 20px 50px;
   font-size: 36px;
   font-weight: bold;
-  font-family: sourceHanSerif;
   cursor: default;
   display: flex;
   flex-wrap: wrap;

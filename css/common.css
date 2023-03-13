@@ -1,11 +1,11 @@
 @font-face {
   font-family: sourceHanSerif;
-  src: url("/font/SourceHanSerifCN/regular.ttf");
+  src: url("/font/SourceHanSerifCN/regular.otf");
   font-weight: normal;
 }
 @font-face {
   font-family: sourceHanSerif;
-  src: url("/font/SourceHanSerifCN/bold.ttf");
+  src: url("/font/SourceHanSerifCN/bold.otf");
   font-weight: bold;
 }
 @font-face {
