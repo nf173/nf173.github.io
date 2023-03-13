@@ -8,6 +8,15 @@
   src: url("/font/SourceHanSerifCN/bold.otf");
   font-weight: bold;
 }
+@font-face {
+  font-family: sourceSans;
+  src: url("/font/SourceSans3VF-Roman.ttf");
+}
+@font-face {
+  font-family: sourceSans;
+  src: url("/font/SourceSans3VF-Italic.ttf");
+  font-style: italic;
+}
 html {
   font-family: sourceSans, sans-serif;
   font-size: 18px;
