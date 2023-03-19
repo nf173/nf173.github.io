@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <title>
+      
+        JavaScript中reduce的用法 | Nanfs.site
+      
+    </title>
+    <meta name="description" content="Nanfs的生活、技术博客"/>
+    <meta name="keywords" content="Nanfs blog 博客 苏几道 苏几道的博客"/>
+    
+      <link rel="apple-touch-icon"
+            sizes="180x180"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="mask-icon"
+            href="/images/logo.svg"
+            color=""/>
+    
+    
+    <link rel="stylesheet" type="text/css" href="/css/layout.css"/>
+    
+      <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?5ff3e6194adc606f85fb596ed6abd562";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+    
+    
+  <link rel="stylesheet" type="text/css" href="/css/post.css"/>
+  
+
+  <meta name="generator" content="Hexo 6.3.0"></head>
+  <body>
+    <div class="head">
+      <div class="nav">
+        <a href="/" class="nav-logo">
+          <img alt="logo" height="60px" width="60px" src="/images/logo.svg" />
+        </a>
+        <input id="navBtn" type="checkbox"/>
+        <div class="nav-menu">
+          
+            
+              <a class="nav-menu-item" href="/developer">开发者</a>
+            
+              <a class="nav-menu-item" href="/causerie">随笔</a>
+            
+          
+        </div>
+        <label class="nav-btn" for="navBtn"></label>
+      </div>
+    </div>
+    <div class="body">
+      
+  <article class="post-content">
+    <div class="post-inner">
+      <div class="post-content__head">
+        <div class="post-title">JavaScript中reduce的用法</div>
+        <div class="post-info">
+          
+  
+    <a href="/tags/JS%E6%96%B9%E6%B3%95/" class="post-tag">#JS方法</a>
+  
+
+
+          <span class="post-date">2023-03-19</span>
+        </div>
+      </div>
+      <div class="post-content__body">
+        
+          <div class="post-gallery">
+            
+          </div>
+        
+        <h2 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h2><p><code>reduce()</code>：对数组中的每个元素执行回调，并将结果返回。<br><code>reduce()</code>：该方法在数组中从左到右工作，与之相对的有 <code>reduceRight()</code>。</p>
+<p>常可用于数组求和、数组求积、数组去重等等。</p>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">arr.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, cur, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">...</span><br><span class="line">&#125;, init)</span><br></pre></td></tr></table></figure>
+
+<h4 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h4><table>
+<thead>
+<tr>
+<th>参数</th>
+<th>可选</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>prev</td>
+<td>必须</td>
+<td>累计回调的返回值；表示上一次调用回调时的返回值或初始值 init</td>
+</tr>
+<tr>
+<td>cur</td>
+<td>必须</td>
+<td>当前正在处理的元素</td>
+</tr>
+<tr>
+<td>index</td>
+<td>可选</td>
+<td>当前正在处理的元素索引；若提供init值，则起始索引为0，否则为1</td>
+</tr>
+<tr>
+<td>arr</td>
+<td>可选</td>
+<td>原数组</td>
+</tr>
+<tr>
+<td>init</td>
+<td>可选</td>
+<td>第一次执行时的初始值</td>
+</tr>
+</tbody></table>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h4 id="未设置初始值-init"><a href="#未设置初始值-init" class="headerlink" title="未设置初始值 init"></a>未设置初始值 <code>init</code></h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> array = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="keyword">const</span> sum = array.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, cur, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(prev, cur, index);</span><br><span class="line">  <span class="keyword">return</span> prev + cur;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;sum: &#x27;</span>, sum);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行结果：</span></span><br><span class="line"><span class="comment">// 1 2 1</span></span><br><span class="line"><span class="comment">// 3 3 2</span></span><br><span class="line"><span class="comment">// 6 4 3</span></span><br><span class="line"><span class="comment">// sum: 10</span></span><br></pre></td></tr></table></figure>
+<p>reduce()进行三次迭代，首次迭代中 prev 的值为1，即数组第一项，而后的迭代中 prev 的值是每次回调计算后的值。</p>
+<h4 id="设置初始值-init"><a href="#设置初始值-init" class="headerlink" title="设置初始值 init"></a>设置初始值 <code>init</code></h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> array = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="keyword">const</span> sum = array.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, cur, index, arr</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(prev, cur, index);</span><br><span class="line">  <span class="keyword">return</span> prev + cur;</span><br><span class="line">&#125;, <span class="number">10</span>)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;sum: &#x27;</span>, sum);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 运行结果：</span></span><br><span class="line"><span class="comment">// 10 1 0</span></span><br><span class="line"><span class="comment">// 11 2 1</span></span><br><span class="line"><span class="comment">// 13 3 2</span></span><br><span class="line"><span class="comment">// 16 4 3</span></span><br><span class="line"><span class="comment">// sum: 20</span></span><br></pre></td></tr></table></figure>
+<p>由此可看出当设置初始值时，首次迭代 prev 即为 init 的值，且 index 初始索引为0。</p>
+<h2 id="reduce-的应用"><a href="#reduce-的应用" class="headerlink" title="reduce()的应用"></a>reduce()的应用</h2><h4 id="数组求和"><a href="#数组求和" class="headerlink" title="数组求和"></a>数组求和</h4><h4 id="计算数组每个元素出现次数"><a href="#计算数组每个元素出现次数" class="headerlink" title="计算数组每个元素出现次数"></a>计算数组每个元素出现次数</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> names = [<span class="string">&#x27;Xiaoming&#x27;</span>, <span class="string">&#x27;Wei&#x27;</span>, <span class="string">&#x27;Xiaohu&#x27;</span>, <span class="string">&#x27;Xiaohu&#x27;</span>, <span class="string">&#x27;Gala&#x27;</span>, <span class="string">&#x27;Wei&#x27;</span>, <span class="string">&#x27;Letme&#x27;</span>, <span class="string">&#x27;Xiaohu&#x27;</span>];</span><br><span class="line"><span class="keyword">var</span> countNames = names.<span class="title function_">reduce</span>(<span class="function">(<span class="params">prev, cur</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="variable language_">console</span>.<span class="title function_">log</span>(prev, cur);</span><br><span class="line">  <span class="keyword">if</span> (cur <span class="keyword">in</span> prev) &#123;</span><br><span class="line">    prev[cur]++;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    prev[cur] = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> prev;</span><br><span class="line">&#125;, &#123;&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(countNames);</span><br><span class="line"></span><br><span class="line"><span class="comment">// &#123;&#125; &#x27;Xiaoming&#x27;</span></span><br><span class="line"><span class="comment">// &#123;Xiaoming: 1&#125; &#x27;Wei&#x27;</span></span><br><span class="line"><span class="comment">// &#123;Xiaoming: 1, Wei: 1&#125; &#x27;Xiaohu&#x27;</span></span><br><span class="line"><span class="comment">// &#123;Xiaoming: 1, Wei: 1, Xiaohu: 1&#125; &#x27;Xiaohu&#x27;</span></span><br><span class="line"><span class="comment">// &#123;Xiaoming: 1, Wei: 1, Xiaohu: 2&#125; &#x27;Gala&#x27;</span></span><br><span class="line"><span class="comment">// &#123;Xiaoming: 1, Wei: 1, Xiaohu: 2, Gala: 1&#125; &#x27;Wei&#x27;</span></span><br><span class="line"><span class="comment">// &#123;Xiaoming: 1, Wei: 2, Xiaohu: 2, Gala: 1&#125; &#x27;Letme&#x27;</span></span><br><span class="line"><span class="comment">// &#123;Xiaoming: 1, Wei: 2, Xiaohu: 3, Gala: 1, Letme: 1&#125; &#x27;Xiaohu&#x27;</span></span><br><span class="line"><span class="comment">// &#123;Xiaoming: 1, Wei: 2, Xiaohu: 3, Gala: 1, Letme: 1&#125;</span></span><br></pre></td></tr></table></figure>
+<p>关键在于将初始值设置为空对象<code>&#123;&#125;</code>，当首次迭代时判断 prev 中没有 <code>Xiaoming</code> 这个属性，因此就将 <code>Xiaoming</code> 作为属性名加入空对象，并给其赋值为1；下一次迭代时若遇到重复元素，该属性自加1。</p>
+<h4 id="数组元素去重"><a href="#数组元素去重" class="headerlink" title="数组元素去重"></a>数组元素去重</h4><p>🏗 未完待续</p>
+
+      </div>
+    </div>
+  </article>
+  <div class="post__foot">
+    
+      <div class="like-author">
+  <input type="checkbox" id="likeCode" />
+  <div class="author-face">
+    <img height="100px"
+         width="100px"
+         id="front-face"
+         alt="author face"
+         src="/images/logo-avatar.jpg"/>
+    <img height="100px"
+         width="100px"
+         id="back-face"
+         alt="like code"
+         src="/images/pay.jpg"/>
+  </div>
+  <div class="like-text">“嘿嘿，好活当赏！”</div>
+  <label for="likeCode" class="like-btn">
+    <svg viewBox="0 0 1024 1024"
+         width="20px"
+         style="margin-right: 10px"
+         height="20px">
+      <path d="M466.88 908.96L113.824 563.296a270.08 270.08 0 0 1 0-387.392c108.8-106.56 284.896-106.56 393.696 0 1.504 1.472 2.976 2.944 4.448 4.48 1.472-1.536 2.944-3.008 4.448-4.48 108.8-106.56 284.896-106.56 393.696 0a269.952 269.952 0 0 1 34.016 347.072l-387.392 385.6a64 64 0 0 1-89.92 0.384z" p-id="13650" fill="#ee4242"/>
+    </svg>
+    喜欢作者
+  </label>
+</div>
+
+    
+    <div class="post-nav">
+  
+    <div class="post-nav-item-left"></div>
+  
+  <div class="vhr"></div>
+  
+    <a class="post-nav-item-right" href="/2023/03/18/%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F%E8%B7%AF%E7%94%B1%E7%AF%87/">
+      <div class="text-align">
+        <span class="text-small">下一篇</span>
+        <svg t="1670570876164"
+             class="icon"
+             viewBox="0 0 1024 1024"
+             transform="scale(-1,-1)"
+             width="16"
+             height="16">
+          <path d="M384 512L731.733333 202.666667c17.066667-14.933333 19.2-42.666667 4.266667-59.733334-14.933333-17.066667-42.666667-19.2-59.733333-4.266666l-384 341.333333c-10.666667 8.533333-14.933333 19.2-14.933334 32s4.266667 23.466667 14.933334 32l384 341.333333c8.533333 6.4 19.2 10.666667 27.733333 10.666667 12.8 0 23.466667-4.266667 32-14.933333 14.933333-17.066667 14.933333-44.8-4.266667-59.733334L384 512z" p-id="14596"/>
+        </svg>
+      </div>
+      微信小程序之路由
+    </a>
+  
+</div>
+
+    
+    
+  </div>
+
+    </div>
+    <div class="foot">
+      <div class="foot-inner">
+        <div class="foot__head">
+          
+            <div class="foot-line">
+              <div class="matts">夸</div><div class="matts">你</div><div class="matts">可</div><div class="matts">爱</div>
+            </div>
+          
+            <div class="foot-line">
+              <div class="matts">好</div><div class="matts">像</div><div class="matts">骂</div><div class="matts">你</div><div class="matts">怯</div><div class="matts">懦</div>
+            </div>
+          
+        </div>
+        <div class="foot__body">
+          
+            <div class="foot-item">
+              <div class="foot-item__head">朋友</div>
+              <div class="foot-item__body">
+                
+                  <div class="text">
+                    <img alt="link"
+                         height="20px"
+                         width="20px"
+                         src="/images/icon/icon-link.svg"/>
+                    <a class="foot-link" target="_blank" href="https://github.com/hooozen/hexo-theme-tranquility">Theme Tranquility</a>
+                  </div>
+                
+                <div class="text">
+                  <img alt="link"
+                       height="20px"
+                       width="20px"
+                       src="/images/icon/icon-link+.svg"/>
+                  <a class="foot-link"
+                     target="_blank"
+                     href="mailto:1272487263@qq.com?subject=%E7%94%B3%E8%AF%B7%20Hozen.site%20%E7%9A%84%E5%8F%8B%E9%93%BE%E4%BD%8D%E7%BD%AE">
+                  申请友链</a>
+                </div>
+              </div>
+            </div>
+          
+          
+            <div class="foot-item">
+              <div class="foot-item__head">账号</div>
+              <div class="foot-item__body">
+                
+                  <div class="text">
+                    <img alt="link" height="20px" width="20px" src="/images/logo-github.svg"/>
+                    <a class="foot-link" target="_blank" href="https://github.com/nf173">github</a>
+                  </div>
+                
+              </div>
+            </div>
+          
+          <div class="foot-item">
+            <div class="foot-item__head">联系</div>
+            <div class="foot-item__body">
+              <div class="text">
+                <img alt="link"
+                     height="20px"
+                     width="20px"
+                     src="/images/icon/icon-email.svg"/>
+                <a class="foot-link" href="mailto:1272487263@qq.com">1272487263@qq.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          <a href="https://github.com/nf173/nf173.github.io">Nanfs.site</a> &nbsp;|&nbsp;由&nbsp;<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>&nbsp;及&nbsp;
+          <svg width="20" height="20" viewBox="0 0 725 725">
+            <path fill-rule="evenodd" fill="rgb(221, 221, 221)"
+            d="M145.870,236.632 L396.955,103.578 L431.292,419.44 L156.600,522.53 L145.870,236.632 Z" />
+            <path fill-rule="evenodd" fill="rgb(159, 159, 159)"
+            d="M396.955,103.578 L564.345,234.486 L611.558,513.469 L431.292,419.44 L396.955,103.578 Z" />
+            <path fill-rule="evenodd" fill="rgb(0, 0, 0)"
+            d="M431.292,419.44 L611.558,513.469 L358.327,595.18 L156.600,522.53 L431.292,419.44 Z" />
+          </svg>
+          <a href="https://github.com/hooozen/hexo-theme-tranquility">致远</a>&nbsp;驱动
+        </div>
+      </div>
+    </div>
+    
+    
+  
+
+  </body>
+</html>
