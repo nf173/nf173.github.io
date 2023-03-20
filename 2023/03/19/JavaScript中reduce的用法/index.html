@@ -47,7 +47,7 @@
     
     
   <link rel="stylesheet" type="text/css" href="/css/post.css"/>
-  
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
 
   <meta name="generator" content="Hexo 6.3.0"></head>
   <body>
@@ -78,7 +78,9 @@
         <div class="post-info">
           
   
-    <a href="/tags/JS%E6%96%B9%E6%B3%95/" class="post-tag">#JS方法</a>
+    <a href="/tags/JavaScript/" class="post-tag">#JavaScript</a>
+  
+    <a href="/tags/%E6%95%B0%E7%BB%84%E6%96%B9%E6%B3%95/" class="post-tag">#数组方法</a>
   
 
 
@@ -171,7 +173,19 @@
     
     <div class="post-nav">
   
-    <div class="post-nav-item-left"></div>
+    <a class="post-nav-item-left" href="/2023/03/20/%E5%8F%96%E6%95%B4%E3%80%81%E5%8F%96%E4%BD%99%E5%92%8C%E5%8F%96%E6%A8%A1/">
+      <div class="text-align">
+        <svg t="1670570876164"
+             class="icon"
+             viewBox="0 0 1024 1024"
+             width="16"
+             height="16">
+          <path d="M384 512L731.733333 202.666667c17.066667-14.933333 19.2-42.666667 4.266667-59.733334-14.933333-17.066667-42.666667-19.2-59.733333-4.266666l-384 341.333333c-10.666667 8.533333-14.933333 19.2-14.933334 32s4.266667 23.466667 14.933334 32l384 341.333333c8.533333 6.4 19.2 10.666667 27.733333 10.666667 12.8 0 23.466667-4.266667 32-14.933333 14.933333-17.066667 14.933333-44.8-4.266667-59.733334L384 512z" p-id="14596"/>
+        </svg>
+        <span class="text-small">上一篇</span>
+      </div>
+      <div>取整、取余和取模</div>
+    </a>
   
   <div class="vhr"></div>
   
@@ -193,7 +207,7 @@
 </div>
 
     
-    
+    <div id="gitalk-container"></div>
   </div>
 
     </div>
@@ -279,7 +293,14 @@
     </div>
     
     
-  
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+  const param = JSON.parse('{"enable":true,"owner":"nf173","admin":"Nanfs","repo":"nf173.github.io","clientID":"2d44afe9a22a8e20129a","clientSecret":"0967cd51d06b7736bd1889f0fa91a5c2cea41632","distractionFreeMode":false,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN"}')
+  param.id = location.pathname
+  const gitalk = new Gitalk(param)
+  gitalk.render('gitalk-container')
+</script>
+
 
   </body>
 </html>
