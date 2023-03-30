@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <title>
+      
+        记录一个关于 Vue3 + Ts 自定义指令的问题 | Nanfs.site
+      
+    </title>
+    <meta name="description" content="Nanfs的生活、技术博客"/>
+    <meta name="keywords" content="Nanfs blog 博客 苏几道 苏几道的博客"/>
+    
+      <link rel="apple-touch-icon"
+            sizes="180x180"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="mask-icon"
+            href="/images/logo.svg"
+            color=""/>
+    
+    
+    <link rel="stylesheet" type="text/css" href="/css/layout.css"/>
+    
+      <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?5ff3e6194adc606f85fb596ed6abd562";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+    
+    
+  <link rel="stylesheet" type="text/css" href="/css/post.css"/>
+  
+
+  <meta name="generator" content="Hexo 6.3.0"></head>
+  <body>
+    <div class="head">
+      <div class="nav">
+        <a href="/" class="nav-logo">
+          <img alt="logo" height="60px" width="60px" src="/images/logo.svg" />
+        </a>
+        <input id="navBtn" type="checkbox"/>
+        <div class="nav-menu">
+          
+            
+              <a class="nav-menu-item" href="/developer">开发者</a>
+            
+              <a class="nav-menu-item" href="/causerie">随笔</a>
+            
+          
+        </div>
+        <label class="nav-btn" for="navBtn"></label>
+      </div>
+    </div>
+    <div class="body">
+      
+  <article class="post-content">
+    <div class="post-inner">
+      <div class="post-content__head">
+        <div class="post-title">记录一个关于 Vue3 + Ts 自定义指令的问题</div>
+        <div class="post-info">
+          
+  
+    <a href="/tags/Vue3/" class="post-tag">#Vue3</a>
+  
+    <a href="/tags/TypeScript/" class="post-tag">#TypeScript</a>
+  
+    <a href="/tags/Directives/" class="post-tag">#Directives</a>
+  
+
+
+          <span class="post-date">2023-03-30</span>
+        </div>
+      </div>
+      <div class="post-content__body">
+        
+          <div class="post-gallery">
+            
+          </div>
+        
+        <p>在项目中，尝试封装一个可以实现打字机效果的自定义指令。代码如下</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">type</span> &#123; <span class="title class_">Directive</span> &#125; <span class="keyword">from</span> <span class="string">&quot;vue&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">typeWriter</span>: <span class="title class_">Directive</span> = &#123;</span><br><span class="line">  <span class="title function_">created</span>(<span class="params">el: HTMLElement</span>) &#123;</span><br><span class="line">    el.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;type-writer&quot;</span>);</span><br><span class="line">    <span class="keyword">const</span> color = <span class="title function_">getComputedStyle</span>(el).<span class="property">color</span>;</span><br><span class="line">    el.<span class="title function_">setAttribute</span>(<span class="string">&quot;borderColor&quot;</span>, color);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">mounted</span>(<span class="params">el: HTMLElement</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> oldText = el.<span class="property">textContent</span> || <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">const</span> speed = <span class="number">100</span>;</span><br><span class="line">    el.<span class="property">textContent</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">typeWriter</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (count &lt; oldText.<span class="property">length</span>) &#123;</span><br><span class="line">        el.<span class="property">innerHTML</span> += oldText.<span class="title function_">charAt</span>(count);</span><br><span class="line">        count++;</span><br><span class="line">        <span class="keyword">const</span> timer = <span class="built_in">setTimeout</span>(typeWriter, speed);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">timer</span> = timer; <span class="comment">// 报错：这里的this为undefind</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="title function_">typeWriter</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">unmounted</span>(<span class="params">el: HTMLElement</span>) &#123;</span><br><span class="line">    <span class="built_in">clearInterval</span>(el.<span class="property">timer</span>); <span class="comment">// 在unmounted中清除计时器</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> typeWriter;</span><br></pre></td></tr></table></figure>
+
+<p>发现无法获取到 <code>this</code>，<code>this</code> 的值为 <code>undefind</code>。</p>
+<p>查询资料后得知，需要先定义一个接口扩展，然后将其作为类型声明给 <code>el: MyEl</code>，于是乎在接口中定义的 <code>timer</code> 属性便能够通过 <code>el</code> 拿到了。修改代码如下：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">type</span> &#123; <span class="title class_">Directive</span> &#125; <span class="keyword">from</span> <span class="string">&quot;vue&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">MyEl</span> <span class="keyword">extends</span> <span class="title class_">HTMLElement</span> &#123;</span><br><span class="line">  <span class="attr">timer</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">typeWriter</span>: <span class="title class_">Directive</span> = &#123;</span><br><span class="line">  <span class="title function_">created</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">    el.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&quot;type-writer&quot;</span>);</span><br><span class="line">    <span class="keyword">const</span> color = <span class="title function_">getComputedStyle</span>(el).<span class="property">color</span>;</span><br><span class="line">    el.<span class="title function_">setAttribute</span>(<span class="string">&quot;borderColor&quot;</span>, color);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(el);</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">mounted</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> oldText = el.<span class="property">textContent</span> || <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">const</span> speed = <span class="number">100</span>;</span><br><span class="line">    el.<span class="property">textContent</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">typeWriter</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (count &lt; oldText.<span class="property">length</span>) &#123;</span><br><span class="line">        el.<span class="property">innerHTML</span> += oldText.<span class="title function_">charAt</span>(count);</span><br><span class="line">        count++;</span><br><span class="line">        <span class="keyword">const</span> timer = <span class="built_in">setTimeout</span>(typeWriter, speed);</span><br><span class="line">        el.<span class="property">timer</span> = timer; <span class="comment">// 拿到定时器</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="title function_">typeWriter</span>();</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">unmounted</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">    <span class="built_in">clearInterval</span>(el.<span class="property">timer</span>); <span class="comment">// 在unmounted中清除计时器</span></span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> typeWriter;</span><br></pre></td></tr></table></figure>
+
+      </div>
+    </div>
+  </article>
+  <div class="post__foot">
+    
+    <div class="post-nav">
+  
+    <div class="post-nav-item-left"></div>
+  
+  <div class="vhr"></div>
+  
+    <a class="post-nav-item-right" href="/2023/03/20/%E5%88%9D%E8%AF%86Pinia/">
+      <div class="text-align">
+        <span class="text-small">下一篇</span>
+        <svg t="1670570876164"
+             class="icon"
+             viewBox="0 0 1024 1024"
+             transform="scale(-1,-1)"
+             width="16"
+             height="16">
+          <path d="M384 512L731.733333 202.666667c17.066667-14.933333 19.2-42.666667 4.266667-59.733334-14.933333-17.066667-42.666667-19.2-59.733333-4.266666l-384 341.333333c-10.666667 8.533333-14.933333 19.2-14.933334 32s4.266667 23.466667 14.933334 32l384 341.333333c8.533333 6.4 19.2 10.666667 27.733333 10.666667 12.8 0 23.466667-4.266667 32-14.933333 14.933333-17.066667 14.933333-44.8-4.266667-59.733334L384 512z" p-id="14596"/>
+        </svg>
+      </div>
+      初识Pinia
+    </a>
+  
+</div>
+
+    
+    
+  </div>
+
+    </div>
+    <div class="foot">
+      <div class="foot-inner">
+        <div class="foot__head">
+          
+            <div class="foot-line">
+              <div class="matts">夸</div><div class="matts">你</div><div class="matts">可</div><div class="matts">爱</div>
+            </div>
+          
+            <div class="foot-line">
+              <div class="matts">好</div><div class="matts">像</div><div class="matts">骂</div><div class="matts">你</div><div class="matts">怯</div><div class="matts">懦</div>
+            </div>
+          
+        </div>
+        <div class="foot__body">
+          
+            <div class="foot-item">
+              <div class="foot-item__head">朋友</div>
+              <div class="foot-item__body">
+                
+                  <div class="text">
+                    <img alt="link"
+                         height="20px"
+                         width="20px"
+                         src="/images/icon/icon-link.svg"/>
+                    <a class="foot-link" target="_blank" href="https://github.com/hooozen/hexo-theme-tranquility">Theme Tranquility</a>
+                  </div>
+                
+                <div class="text">
+                  <img alt="link"
+                       height="20px"
+                       width="20px"
+                       src="/images/icon/icon-link+.svg"/>
+                  <a class="foot-link"
+                     target="_blank"
+                     href="mailto:1272487263@qq.com?subject=%E7%94%B3%E8%AF%B7%20Hozen.site%20%E7%9A%84%E5%8F%8B%E9%93%BE%E4%BD%8D%E7%BD%AE">
+                  申请友链</a>
+                </div>
+              </div>
+            </div>
+          
+          
+            <div class="foot-item">
+              <div class="foot-item__head">账号</div>
+              <div class="foot-item__body">
+                
+                  <div class="text">
+                    <img alt="link" height="20px" width="20px" src="/images/logo-github.svg"/>
+                    <a class="foot-link" target="_blank" href="https://github.com/nf173">github</a>
+                  </div>
+                
+              </div>
+            </div>
+          
+          <div class="foot-item">
+            <div class="foot-item__head">联系</div>
+            <div class="foot-item__body">
+              <div class="text">
+                <img alt="link"
+                     height="20px"
+                     width="20px"
+                     src="/images/icon/icon-email.svg"/>
+                <a class="foot-link" href="mailto:1272487263@qq.com">1272487263@qq.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          <a href="https://github.com/nf173/nf173.github.io">Nanfs.site</a> &nbsp;|&nbsp;由&nbsp;<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>&nbsp;及&nbsp;
+          <svg width="20" height="20" viewBox="0 0 725 725">
+            <path fill-rule="evenodd" fill="rgb(221, 221, 221)"
+            d="M145.870,236.632 L396.955,103.578 L431.292,419.44 L156.600,522.53 L145.870,236.632 Z" />
+            <path fill-rule="evenodd" fill="rgb(159, 159, 159)"
+            d="M396.955,103.578 L564.345,234.486 L611.558,513.469 L431.292,419.44 L396.955,103.578 Z" />
+            <path fill-rule="evenodd" fill="rgb(0, 0, 0)"
+            d="M431.292,419.44 L611.558,513.469 L358.327,595.18 L156.600,522.53 L431.292,419.44 Z" />
+          </svg>
+          <a href="https://github.com/hooozen/hexo-theme-tranquility">致远</a>&nbsp;驱动
+        </div>
+      </div>
+    </div>
+    
+    
+  
+
+  </body>
+</html>
