@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <title>
+      
+        封装一个打字机效果的自定义指令 | Nanfs.site
+      
+    </title>
+    <meta name="description" content="Nanfs的生活、技术博客"/>
+    <meta name="keywords" content="Nanfs blog 博客 苏几道 苏几道的博客"/>
+    
+      <link rel="apple-touch-icon"
+            sizes="180x180"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="mask-icon"
+            href="/images/logo.svg"
+            color=""/>
+    
+    
+    <link rel="stylesheet" type="text/css" href="/css/layout.css"/>
+    
+      <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?5ff3e6194adc606f85fb596ed6abd562";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+    
+    
+  <link rel="stylesheet" type="text/css" href="/css/post.css"/>
+  
+
+  <meta name="generator" content="Hexo 6.3.0"></head>
+  <body>
+    <div class="head">
+      <div class="nav">
+        <a href="/" class="nav-logo">
+          <img alt="logo" height="60px" width="60px" src="/images/logo.svg" />
+        </a>
+        <input id="navBtn" type="checkbox"/>
+        <div class="nav-menu">
+          
+            
+              <a class="nav-menu-item" href="/developer">开发者</a>
+            
+              <a class="nav-menu-item" href="/causerie">随笔</a>
+            
+          
+        </div>
+        <label class="nav-btn" for="navBtn"></label>
+      </div>
+    </div>
+    <div class="body">
+      
+  <article class="post-content">
+    <div class="post-inner">
+      <div class="post-content__head">
+        <div class="post-title">封装一个打字机效果的自定义指令</div>
+        <div class="post-info">
+          
+  
+    <a href="/tags/Vue3/" class="post-tag">#Vue3</a>
+  
+    <a href="/tags/TypeScript/" class="post-tag">#TypeScript</a>
+  
+    <a href="/tags/Directives/" class="post-tag">#Directives</a>
+  
+    <a href="/tags/%E6%89%93%E5%AD%97%E6%9C%BA/" class="post-tag">#打字机</a>
+  
+
+
+          <span class="post-date">2023-03-31</span>
+        </div>
+      </div>
+      <div class="post-content__body">
+        
+          <div class="post-gallery">
+            
+          </div>
+        
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在访问 Typora 官网时，对其首页的打字机效果很感兴趣，于是就想在项目中自行封装一个自定义指令，具体效果如下图：</p>
+<p><img src="http://rrgotrqil.bkt.clouddn.com/%E6%89%93%E5%AD%97%E6%9C%BA%E6%95%88%E6%9E%9C2.gif" alt="打字机回退效果"></p>
+<p>封装后的指令只需要将其绑定在元素上便能使用，那么具体是如何实现的呢？</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;Home&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">h1</span> <span class="attr">v-typewriter.loop.underline</span>&gt;</span>这是一段打字机效果文字演示...<span class="tag">&lt;/<span class="name">h1</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>根据演示效果分析，我们可以将其功能分为两部分，一部分是逐字打印文本，另一部分则是光标的闪烁效果。</p>
+<h3 id="光标"><a href="#光标" class="headerlink" title="光标"></a>光标</h3><p>光标我们很容易能想到可以用CSS伪元素实现，因为CSS中的伪元素 <code>::after</code> 是自动跟随在内容末尾的，这符合光标的特性。我们先定义一个类名 <code>.type-writer</code>，然后给 <code>::after</code> 设为行内块，再给他一个宽高，分别为 <code>0.1em</code> 和 <code>0.5em</code>，em 是相对于文本的垂直高度的单位，接着设置形变原点为中心，利用 <code>transform: scaleY(2)</code> 纵向拉长2倍，这就搞定了。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.type-writer</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">width</span>: .<span class="number">1em</span>;</span><br><span class="line">  <span class="attribute">height</span>: .<span class="number">5em</span>;</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">scaleY</span>(<span class="number">2</span>);</span><br><span class="line">  <span class="attribute">margin-left</span>: .<span class="number">1em</span>;</span><br><span class="line">  <span class="attribute">margin-bottom</span>: .<span class="number">1em</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>闪烁效果就更简单了，定义一个名为 blink 的动画：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.type-writer</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">  ...</span><br><span class="line">  <span class="attribute">animation</span>: blink <span class="number">1s</span> infinite;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@keyframes</span> blink &#123;</span><br><span class="line">  <span class="number">0%</span> &#123;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">scaleY</span>(<span class="number">2</span>);</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="number">25%</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">0</span>;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">scaleY</span>(<span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="number">100%</span> &#123;</span><br><span class="line">    <span class="attribute">opacity</span>: <span class="number">1</span>;</span><br><span class="line">    <span class="attribute">transform</span>: <span class="built_in">scaleY</span>(<span class="number">2</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>还有一个问题，就是如何让光标颜色与文本颜色保持一致。我们可以给 <code>::after</code> 的 <code>background-color</code> 一个变量 <code>--bg-color</code>，用来接收文本颜色，在利用 js 获取到文本的颜色属性，赋给这个变量：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 光标颜色继承文本颜色</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="title function_">mounted</span>(<span class="params">el: HTMLElement</span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">colorInheritance</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">const</span> color = <span class="title function_">getComputedStyle</span>(el).<span class="property">color</span>;</span><br><span class="line">    el.<span class="property">style</span>.<span class="title function_">setProperty</span>(<span class="string">&#x27;--bg-color&#x27;</span>, color);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="title function_">colorInheritance</span>();</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这样光标部分就完成了。根据这个原理我们还可以添加不同类来实现不同的光标样式。</p>
+<h3 id="打印"><a href="#打印" class="headerlink" title="打印"></a>打印</h3><p>那么如何实现打印呢，其实也很简单，无非就是拿到文本内容，然后控制它逐字显示而已：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span> <span class="title class_">MyEl</span> <span class="keyword">extends</span> <span class="title class_">HTMLElement</span> &#123;</span><br><span class="line">  <span class="attr">oldText</span>: <span class="built_in">string</span>;	<span class="comment">// 用于保存原来的文本内容</span></span><br><span class="line">  <span class="attr">isShow</span>: boolea;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">created</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">  el.<span class="property">oldText</span> = <span class="string">&quot; &quot;</span> + el.<span class="property">innerHTML</span> || <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;,</span><br><span class="line"><span class="title function_">mounted</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> count = <span class="number">0</span>;  <span class="comment">// 打印文字计数</span></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 打印文字</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">typeWriter</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span> (count &lt; el.<span class="property">oldText</span>.<span class="property">length</span>) &#123;</span><br><span class="line">      el.<span class="property">innerHTML</span> += el.<span class="property">oldText</span>.<span class="title function_">charAt</span>(count);</span><br><span class="line">      count++;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      el.<span class="property">isShow</span> = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>定义一个接口，<code>oldText</code> 用于保存原来的文本内容，在 <code>created</code> 钩子中把元素的内容赋值给它。然后创建一个 <code>count</code> 变量，在 <code>typeWriter</code> 方法中判断 <code>count</code> 是否小于文本文字长度，然后显示它。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">mounted</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  el.<span class="property">timer</span> = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">typeWriter</span>();</span><br><span class="line">  &#125;, speed);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接着创建计时器，在接口中增加 <code>timer</code> 属性，把计时器挂载到 el 上，这样我们就可以在 <code>unmounted</code> 组件卸载时清除计时器，避免造成性能方面的问题，再计时器的循环时间保存为变量 <code>speed</code>，方便指令传参。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">type</span> &#123; <span class="title class_">Directive</span>, <span class="title class_">DirectiveBinding</span>  &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">MyEl</span> <span class="keyword">extends</span> <span class="title class_">HTMLElement</span> &#123;</span><br><span class="line">  <span class="attr">timer</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">oldText</span>: <span class="built_in">string</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">mounted</span>(<span class="params">el: MyEl, binding: DirectiveBinding</span>) &#123;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">const</span> speed = binding.<span class="property">value</span> || <span class="number">100</span>;  <span class="comment">// 获取打印速度</span></span><br><span class="line">  </span><br><span class="line">  el.<span class="property">timer</span> = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">typeWriter</span>();</span><br><span class="line">  &#125;, speed);</span><br><span class="line">&#125;,</span><br><span class="line"><span class="title function_">unmounted</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">  <span class="built_in">clearInterval</span>(el.<span class="property">timer</span>);  <span class="comment">// 当组件卸载时清除计时器</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="打印回退"><a href="#打印回退" class="headerlink" title="打印回退"></a>打印回退</h3><p>继续还能增加一个打印回退的功能，当全部文字都被打印以后，再逐字回退文本。我们只需添加一个回退的方法。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">mounted</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">  ...</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 回退文字</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">const</span> <span class="title function_">typeWriterReduce</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">    <span class="keyword">if</span>(count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      el.<span class="property">innerHTML</span> = el.<span class="property">oldText</span>.<span class="title function_">substring</span>(<span class="number">0</span>, count-<span class="number">1</span>);</span><br><span class="line">      count--;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      el.<span class="property">isShow</span> = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据是否传入修饰符 loop 判断一下是否循环打印。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(binding.<span class="property">modifiers</span>.<span class="property">loop</span>) &#123;  <span class="comment">// 判断是否循环打印</span></span><br><span class="line">  el.<span class="property">timer</span> = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> timer = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(el.<span class="property">isShow</span>) &#123;</span><br><span class="line">      timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="title function_">typeWriterReduce</span>();</span><br><span class="line">      &#125;, <span class="number">800</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">      <span class="title function_">typeWriter</span>();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, speed);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  el.<span class="property">timer</span> = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="title function_">typeWriter</span>();</span><br><span class="line">  &#125;, speed);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>至此，一个打字机指令就完成了。附完整代码：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">type</span> &#123; <span class="title class_">Directive</span>, <span class="title class_">DirectiveBinding</span>  &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">MyEl</span> <span class="keyword">extends</span> <span class="title class_">HTMLElement</span> &#123;</span><br><span class="line">  <span class="attr">timer</span>: <span class="built_in">number</span>;</span><br><span class="line">  <span class="attr">oldText</span>: <span class="built_in">string</span>;</span><br><span class="line">  <span class="attr">isShow</span>: <span class="built_in">boolean</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">typeWriter</span>:<span class="title class_">Directive</span> = &#123;</span><br><span class="line">  <span class="title function_">created</span>(<span class="params">el: MyEl, binding: DirectiveBinding</span>) &#123;</span><br><span class="line">    el.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&#x27;type-writer&#x27;</span>);</span><br><span class="line">    <span class="keyword">if</span>(binding.<span class="property">modifiers</span>.<span class="property">underline</span>) &#123;  <span class="comment">// 判断光标样式</span></span><br><span class="line">      el.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&#x27;type-writer_underline&#x27;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      el.<span class="property">classList</span>.<span class="title function_">add</span>(<span class="string">&#x27;type-writer_cursor&#x27;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    el.<span class="property">oldText</span> = <span class="string">&quot; &quot;</span> + el.<span class="property">innerHTML</span> || <span class="string">&quot;&quot;</span>;</span><br><span class="line">    el.<span class="property">innerHTML</span> = <span class="string">&quot;&quot;</span>;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">mounted</span>(<span class="params">el: MyEl, binding: DirectiveBinding</span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> count = <span class="number">0</span>;  <span class="comment">// 打印文字计数</span></span><br><span class="line">    <span class="keyword">const</span> speed = binding.<span class="property">value</span> || <span class="number">100</span>;  <span class="comment">// 获取打印速度</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 光标颜色继承文本颜色</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">colorInheritance</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">const</span> color = <span class="title function_">getComputedStyle</span>(el).<span class="property">color</span>;</span><br><span class="line">      el.<span class="property">style</span>.<span class="title function_">setProperty</span>(<span class="string">&#x27;--bg-color&#x27;</span>, color);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="title function_">colorInheritance</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 打印文字</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">typeWriter</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (count &lt; el.<span class="property">oldText</span>.<span class="property">length</span>) &#123;</span><br><span class="line">        el.<span class="property">innerHTML</span> += el.<span class="property">oldText</span>.<span class="title function_">charAt</span>(count);</span><br><span class="line">        count++;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        el.<span class="property">isShow</span> = <span class="literal">true</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 回退文字</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">typeWriterReduce</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span>(count &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        el.<span class="property">innerHTML</span> = el.<span class="property">oldText</span>.<span class="title function_">substring</span>(<span class="number">0</span>, count-<span class="number">1</span>);</span><br><span class="line">        count--;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        el.<span class="property">isShow</span> = <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(binding.<span class="property">modifiers</span>.<span class="property">loop</span>) &#123;  <span class="comment">// 判断是否循环打印</span></span><br><span class="line">      el.<span class="property">timer</span> = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">let</span> timer = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span>(el.<span class="property">isShow</span>) &#123;</span><br><span class="line">          timer = <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">            <span class="title function_">typeWriterReduce</span>();</span><br><span class="line">          &#125;, <span class="number">800</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="built_in">clearTimeout</span>(timer);</span><br><span class="line">          <span class="title function_">typeWriter</span>();</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;, speed);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      el.<span class="property">timer</span> = <span class="built_in">setInterval</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="title function_">typeWriter</span>();</span><br><span class="line">      &#125;, speed);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="title function_">unmounted</span>(<span class="params">el: MyEl</span>) &#123;</span><br><span class="line">    <span class="built_in">clearInterval</span>(el.<span class="property">timer</span>);  <span class="comment">// 当组件卸载时清除计时器</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> typeWriter;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+      </div>
+    </div>
+  </article>
+  <div class="post__foot">
+    
+    <div class="post-nav">
+  
+    <div class="post-nav-item-left"></div>
+  
+  <div class="vhr"></div>
+  
+    <a class="post-nav-item-right" href="/2023/03/30/%E8%AE%B0%E5%BD%95%E4%B8%80%E4%B8%AA%E5%85%B3%E4%BA%8E-Vue3-Ts-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%8C%87%E4%BB%A4%E7%9A%84%E9%97%AE%E9%A2%98/">
+      <div class="text-align">
+        <span class="text-small">下一篇</span>
+        <svg t="1670570876164"
+             class="icon"
+             viewBox="0 0 1024 1024"
+             transform="scale(-1,-1)"
+             width="16"
+             height="16">
+          <path d="M384 512L731.733333 202.666667c17.066667-14.933333 19.2-42.666667 4.266667-59.733334-14.933333-17.066667-42.666667-19.2-59.733333-4.266666l-384 341.333333c-10.666667 8.533333-14.933333 19.2-14.933334 32s4.266667 23.466667 14.933334 32l384 341.333333c8.533333 6.4 19.2 10.666667 27.733333 10.666667 12.8 0 23.466667-4.266667 32-14.933333 14.933333-17.066667 14.933333-44.8-4.266667-59.733334L384 512z" p-id="14596"/>
+        </svg>
+      </div>
+      记录一个关于 Vue3 + Ts 自定义指令的问题
+    </a>
+  
+</div>
+
+    
+    
+  </div>
+
+    </div>
+    <div class="foot">
+      <div class="foot-inner">
+        <div class="foot__head">
+          
+            <div class="foot-line">
+              <div class="matts">夸</div><div class="matts">你</div><div class="matts">可</div><div class="matts">爱</div>
+            </div>
+          
+            <div class="foot-line">
+              <div class="matts">好</div><div class="matts">像</div><div class="matts">骂</div><div class="matts">你</div><div class="matts">怯</div><div class="matts">懦</div>
+            </div>
+          
+        </div>
+        <div class="foot__body">
+          
+            <div class="foot-item">
+              <div class="foot-item__head">朋友</div>
+              <div class="foot-item__body">
+                
+                  <div class="text">
+                    <img alt="link"
+                         height="20px"
+                         width="20px"
+                         src="/images/icon/icon-link.svg"/>
+                    <a class="foot-link" target="_blank" href="https://github.com/hooozen/hexo-theme-tranquility">Theme Tranquility</a>
+                  </div>
+                
+                <div class="text">
+                  <img alt="link"
+                       height="20px"
+                       width="20px"
+                       src="/images/icon/icon-link+.svg"/>
+                  <a class="foot-link"
+                     target="_blank"
+                     href="mailto:1272487263@qq.com?subject=%E7%94%B3%E8%AF%B7%20Hozen.site%20%E7%9A%84%E5%8F%8B%E9%93%BE%E4%BD%8D%E7%BD%AE">
+                  申请友链</a>
+                </div>
+              </div>
+            </div>
+          
+          
+            <div class="foot-item">
+              <div class="foot-item__head">账号</div>
+              <div class="foot-item__body">
+                
+                  <div class="text">
+                    <img alt="link" height="20px" width="20px" src="/images/logo-github.svg"/>
+                    <a class="foot-link" target="_blank" href="https://github.com/nf173">github</a>
+                  </div>
+                
+              </div>
+            </div>
+          
+          <div class="foot-item">
+            <div class="foot-item__head">联系</div>
+            <div class="foot-item__body">
+              <div class="text">
+                <img alt="link"
+                     height="20px"
+                     width="20px"
+                     src="/images/icon/icon-email.svg"/>
+                <a class="foot-link" href="mailto:1272487263@qq.com">1272487263@qq.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          <a href="https://github.com/nf173/nf173.github.io">Nanfs.site</a> &nbsp;|&nbsp;由&nbsp;<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>&nbsp;及&nbsp;
+          <svg width="20" height="20" viewBox="0 0 725 725">
+            <path fill-rule="evenodd" fill="rgb(221, 221, 221)"
+            d="M145.870,236.632 L396.955,103.578 L431.292,419.44 L156.600,522.53 L145.870,236.632 Z" />
+            <path fill-rule="evenodd" fill="rgb(159, 159, 159)"
+            d="M396.955,103.578 L564.345,234.486 L611.558,513.469 L431.292,419.44 L396.955,103.578 Z" />
+            <path fill-rule="evenodd" fill="rgb(0, 0, 0)"
+            d="M431.292,419.44 L611.558,513.469 L358.327,595.18 L156.600,522.53 L431.292,419.44 Z" />
+          </svg>
+          <a href="https://github.com/hooozen/hexo-theme-tranquility">致远</a>&nbsp;驱动
+        </div>
+      </div>
+    </div>
+    
+    
+  
+
+  </body>
+</html>
