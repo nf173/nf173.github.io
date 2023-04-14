@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <title>
+      
+        浅谈闭包 | Nanfs.site
+      
+    </title>
+    <meta name="description" content="Nanfs的生活、技术博客"/>
+    <meta name="keywords" content="Nanfs blog 博客 苏几道 苏几道的博客"/>
+    
+      <link rel="apple-touch-icon"
+            sizes="180x180"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/images/logo.svg"/>
+    
+    
+      <link rel="mask-icon"
+            href="/images/logo.svg"
+            color=""/>
+    
+    
+    <link rel="stylesheet" type="text/css" href="/css/layout.css"/>
+    
+      <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?5ff3e6194adc606f85fb596ed6abd562";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+    
+    
+  <link rel="stylesheet" type="text/css" href="/css/post.css"/>
+  
+
+  <meta name="generator" content="Hexo 6.3.0"></head>
+  <body>
+    <div class="head">
+      <div class="nav">
+        <a href="/" class="nav-logo">
+          <img alt="logo" height="60px" width="60px" src="/images/logo.svg" />
+        </a>
+        <input id="navBtn" type="checkbox"/>
+        <div class="nav-menu">
+          
+            
+              <a class="nav-menu-item" href="/developer">开发者</a>
+            
+              <a class="nav-menu-item" href="/causerie">随笔</a>
+            
+          
+        </div>
+        <label class="nav-btn" for="navBtn"></label>
+      </div>
+    </div>
+    <div class="body">
+      
+  <article class="post-content">
+    <div class="post-inner">
+      <div class="post-content__head">
+        <div class="post-title">浅谈闭包</div>
+        <div class="post-info">
+          
+  
+    <a href="/tags/Javascript/" class="post-tag">#Javascript</a>
+  
+    <a href="/tags/%E9%97%AD%E5%8C%85/" class="post-tag">#闭包</a>
+  
+    <a href="/tags/%E4%BD%9C%E7%94%A8%E5%9F%9F/" class="post-tag">#作用域</a>
+  
+    <a href="/tags/%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE/" class="post-tag">#作用域链</a>
+  
+
+
+          <span class="post-date">2023-04-14</span>
+        </div>
+      </div>
+      <div class="post-content__body">
+        
+          <div class="post-gallery">
+            
+          </div>
+        
+        <h2 id="闭包概念"><a href="#闭包概念" class="headerlink" title="闭包概念"></a>闭包概念</h2><p>网上关于闭包的概念众说纷纭，这里通过学习总结一下自己关于闭包的理解：</p>
+<p>从其表现形式来说闭包其实就是，<strong>在一个函数中返回另一个函数</strong>。换句话说，<strong>闭包可以让你在一个内层函数中访问到其外层函数的作用域</strong>。</p>
+<p>我们知道函数被创建时，会在其内部形成一个作用域，函数外部无法访问定义在函数内部的变量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(b);  <span class="comment">// 报错</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">outter</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="keyword">var</span> b = <span class="number">2</span>;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(c);  <span class="comment">// 报错</span></span><br><span class="line">    </span><br><span class="line">	<span class="keyword">function</span> <span class="title function_">inner</span>(<span class="params"></span>) &#123;</span><br><span class="line">		<span class="keyword">var</span> c = <span class="number">3</span>;</span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(a);  <span class="comment">// 打印 1</span></span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(b);  <span class="comment">// 打印 2</span></span><br><span class="line">		<span class="variable language_">console</span>.<span class="title function_">log</span>(c);  <span class="comment">// 打印 3</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们试图访问一个变量时，将会最先从当前作用域中查找这个变量，如果找不到，就向上去父级作用域查找，直至最顶层的全局作用域，这些作用域形成的路径就叫<strong>作用域链</strong>（Scope chain）。</p>
+<h2 id="闭包特性"><a href="#闭包特性" class="headerlink" title="闭包特性"></a>闭包特性</h2><p>闭包有如下两个特性：</p>
+<p>第一，闭包是一个函数，而且存在于另一个函数内部。</p>
+<p>第二，闭包可以访问到外部函数的变量，且该变量不会被销毁。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">outter</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">function</span> <span class="title function_">inner</span>(<span class="params"></span>) &#123;</span><br><span class="line">        count++</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(count);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> inner;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> out = <span class="title function_">outter</span>();</span><br><span class="line"><span class="title function_">out</span>();	<span class="comment">// 打印 1</span></span><br><span class="line"><span class="title function_">out</span>();	<span class="comment">// 打印 2</span></span><br></pre></td></tr></table></figure>
+
+<p>我们定义了一个外部函数 <code>outter</code>，在其中定义了一个变量 <code>count</code>，又定义了一个内部函数 <code>inner</code>，在内部函数打印外部函数中的变量 <code>count</code>，最后返回内部函数 <code>inner</code>。</p>
+<p>将 <code>outter</code> 运行的结果保存到变量 <code>out</code> 中，也就是把内部函数 <code>inner</code> 赋值给了 <code>out</code>，尽管此时我们实际上运行的是内部函数 <code>inner</code>，但是仍旧能访问到外部函数中的变量，这就是利用了作用域链的特性，主动形成了闭包，只要内部函数依赖着外部函数的变量，那么变量就一直会存在，不会 JS 的被垃圾回收机制销毁。</p>
+<h2 id="闭包作用"><a href="#闭包作用" class="headerlink" title="闭包作用"></a>闭包作用</h2><p><strong>作用一：保护。</strong></p>
+<p>因为闭包会形成私有作用域，因此可以隐藏变量，避免全局污染。适用于模块化开发。</p>
+<p><strong>作用二：保存。</strong></p>
+<p>闭包形成的作用域被外界接收后，会一直存在内存中，不会被销毁，这样就达到了保存数据的目的。但也有了造成内存泄漏的风险。</p>
+
+      </div>
+    </div>
+  </article>
+  <div class="post__foot">
+    
+    <div class="post-nav">
+  
+    <div class="post-nav-item-left"></div>
+  
+  <div class="vhr"></div>
+  
+    <a class="post-nav-item-right" href="/2023/04/07/%E5%85%A5%E5%85%9A%E7%94%B3%E8%AF%B7%E4%B9%A6/">
+      <div class="text-align">
+        <span class="text-small">下一篇</span>
+        <svg t="1670570876164"
+             class="icon"
+             viewBox="0 0 1024 1024"
+             transform="scale(-1,-1)"
+             width="16"
+             height="16">
+          <path d="M384 512L731.733333 202.666667c17.066667-14.933333 19.2-42.666667 4.266667-59.733334-14.933333-17.066667-42.666667-19.2-59.733333-4.266666l-384 341.333333c-10.666667 8.533333-14.933333 19.2-14.933334 32s4.266667 23.466667 14.933334 32l384 341.333333c8.533333 6.4 19.2 10.666667 27.733333 10.666667 12.8 0 23.466667-4.266667 32-14.933333 14.933333-17.066667 14.933333-44.8-4.266667-59.733334L384 512z" p-id="14596"/>
+        </svg>
+      </div>
+      入党申请书
+    </a>
+  
+</div>
+
+    
+    
+  </div>
+
+    </div>
+    <div class="foot">
+      <div class="foot-inner">
+        <div class="foot__head">
+          
+            <div class="foot-line">
+              <div class="matts">夸</div><div class="matts">你</div><div class="matts">可</div><div class="matts">爱</div>
+            </div>
+          
+            <div class="foot-line">
+              <div class="matts">好</div><div class="matts">像</div><div class="matts">骂</div><div class="matts">你</div><div class="matts">怯</div><div class="matts">懦</div>
+            </div>
+          
+        </div>
+        <div class="foot__body">
+          
+            <div class="foot-item">
+              <div class="foot-item__head">朋友</div>
+              <div class="foot-item__body">
+                
+                  <div class="text">
+                    <img alt="link"
+                         height="20px"
+                         width="20px"
+                         src="/images/icon/icon-link.svg"/>
+                    <a class="foot-link" target="_blank" href="https://github.com/hooozen/hexo-theme-tranquility">Theme Tranquility</a>
+                  </div>
+                
+                <div class="text">
+                  <img alt="link"
+                       height="20px"
+                       width="20px"
+                       src="/images/icon/icon-link+.svg"/>
+                  <a class="foot-link"
+                     target="_blank"
+                     href="mailto:1272487263@qq.com?subject=%E7%94%B3%E8%AF%B7%20Hozen.site%20%E7%9A%84%E5%8F%8B%E9%93%BE%E4%BD%8D%E7%BD%AE">
+                  申请友链</a>
+                </div>
+              </div>
+            </div>
+          
+          
+            <div class="foot-item">
+              <div class="foot-item__head">账号</div>
+              <div class="foot-item__body">
+                
+                  <div class="text">
+                    <img alt="link" height="20px" width="20px" src="/images/logo-github.svg"/>
+                    <a class="foot-link" target="_blank" href="https://github.com/nf173">github</a>
+                  </div>
+                
+              </div>
+            </div>
+          
+          <div class="foot-item">
+            <div class="foot-item__head">联系</div>
+            <div class="foot-item__body">
+              <div class="text">
+                <img alt="link"
+                     height="20px"
+                     width="20px"
+                     src="/images/icon/icon-email.svg"/>
+                <a class="foot-link" href="mailto:1272487263@qq.com">1272487263@qq.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="copyright">
+          <a href="https://github.com/nf173/nf173.github.io">Nanfs.site</a> &nbsp;|&nbsp;由&nbsp;<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>&nbsp;及&nbsp;
+          <svg width="20" height="20" viewBox="0 0 725 725">
+            <path fill-rule="evenodd" fill="rgb(221, 221, 221)"
+            d="M145.870,236.632 L396.955,103.578 L431.292,419.44 L156.600,522.53 L145.870,236.632 Z" />
+            <path fill-rule="evenodd" fill="rgb(159, 159, 159)"
+            d="M396.955,103.578 L564.345,234.486 L611.558,513.469 L431.292,419.44 L396.955,103.578 Z" />
+            <path fill-rule="evenodd" fill="rgb(0, 0, 0)"
+            d="M431.292,419.44 L611.558,513.469 L358.327,595.18 L156.600,522.53 L431.292,419.44 Z" />
+          </svg>
+          <a href="https://github.com/hooozen/hexo-theme-tranquility">致远</a>&nbsp;驱动
+        </div>
+      </div>
+    </div>
+    
+    
+  
+
+  </body>
+</html>
