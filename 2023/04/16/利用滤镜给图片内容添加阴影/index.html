@@ -96,11 +96,11 @@
         <h2 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h2><p>项目中有个需求要给人物图片添加阴影，我们想当然的会给图片添加 <code>box-shadow</code> 属性：</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.person</span> &#123;</span><br><span class="line">  <span class="attribute">box-shadow</span>: <span class="number">10px</span> <span class="number">10px</span> <span class="number">10px</span> <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.5</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>但是这样真的可行嘛，我们会发现图片变成了这个鬼样子：</p>
-<p><img src="http://ruffx2afd.hd-bkt.clouddn.com/3213.png" alt="img"></p>
+<p><img src="https://yunjiemi.com/image/9Mp0D" alt="img"></p>
 <p>显然这不是我们要的效果，于是我们就可以用到 <strong>filter: drop-shadow</strong>  属性。</p>
 <figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.person</span> &#123;</span><br><span class="line">  <span class="attribute">filter</span>: <span class="built_in">drop-shadow</span>(<span class="number">10px</span> <span class="number">10px</span> <span class="number">10px</span> <span class="built_in">rgba</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0.5</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://ruffx2afd.hd-bkt.clouddn.com/12323.png" alt="321"></p>
+<p><img src="https://yunjiemi.com/image/9M9fT" alt="321"></p>
 <p><strong>filter: drop-shadow</strong> 的作用是对图片像素边缘设置阴影。</p>
 
       </div>
